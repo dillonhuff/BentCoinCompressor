@@ -7,14 +7,14 @@ import Compress
 import TestUtils
 
 allTests = do
-  numberOfOneBitsTests
+  oneBitLocationsTests
 
-numberOfOneBitsTests =
-  testFunction numberOfOneBits numberOfOneBitsTestCases
+oneBitLocationsTests =
+  testFunction oneBitLocations oneBitLocationsTestCases
 
-numberOfOneBitsTestCases =
+oneBitLocationsTestCases =
   Prelude.map (\(x, y) -> (bitString $ pack x, y))
-  [([], 0),
-   ([0], 0),
-   ([255], 8),
-   ([32, 1, 1, 3], 5)]
+  [([], []),
+   ([0], []),
+   ([255], [0, 1, 2, 3, 4, 5, 6, 7]),
+   ([32, 1, 1, 3], [5, 8, 16, 24, 25])]
