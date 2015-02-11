@@ -1,7 +1,7 @@
 module CompressTests() where
 
 import Data.BitString as BitStr
-import Data.ByteString
+import Data.ByteString as ByteStr
 
 import Compress
 import TestUtils
@@ -9,6 +9,7 @@ import TestUtils
 allTests = do
   oneBitLocationsTests
   truncateTo14BitsTests
+  compressTests
 
 oneBitLocationsTests =
   testFunction oneBitLocations oneBitLocationsTestCases
@@ -30,3 +31,9 @@ truncateTo14BitsTestCases =
    (1, Just $ BitStr.take 14 $ bitString $ pack [1, 0]),
    (255, Just $ BitStr.take 14 $ bitString $ pack [255, 0]),
    (1024, Just $ BitStr.take 14 $ bitString $ pack [0, 4])]
+
+compressTests =
+  testFunction compress compressTestCases
+
+compressTestCases =
+  [(ByteStr.empty, ByteStr.empty)]

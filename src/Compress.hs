@@ -1,5 +1,6 @@
 module Compress(oneBitLocations,
-                truncateTo14Bits) where
+                truncateTo14Bits,
+                compress) where
 
 import Data.Bits
 import Data.BitString as BitStr
@@ -35,3 +36,6 @@ truncateBits n word = BitStr.append nextBit restOfBits
     True -> oneBit
     False -> zeroBit
   restOfBits = truncateBits (n - 1) (shiftR word 1)
+
+compress :: ByteString -> ByteString
+compress byteStr = byteStr
