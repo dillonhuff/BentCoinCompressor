@@ -23,10 +23,8 @@ recOneBitLocations numOnes index bitStr = case BitStr.length bitStr == 0 of
       res1 = recOneBitLocations numOnes (index + 1) $ BitStr.drop 1 bitStr
       res2 = recOneBitLocations (numOnes + 1) (index + 1) $ BitStr.drop 1 bitStr
 
-truncateTo14Bits :: Word32 -> Maybe BitString
-truncateTo14Bits word = case word >= 16384 of
-  True -> Nothing
-  False -> Just $ truncateBits 14 word
+truncateTo14Bits :: Word32 -> BitString
+truncateTo14Bits word = truncateBits 14 word
 
 truncateBits :: Int -> Word32 -> BitString
 truncateBits 0 word = BitStr.empty
@@ -38,4 +36,10 @@ truncateBits n word = BitStr.append nextBit restOfBits
   restOfBits = truncateBits (n - 1) (shiftR word 1)
 
 compress :: ByteString -> ByteString
-compress byteStr = byteStr
+compress byteStr = case numOneBits > 0 of
+  True -> realizeBitStringStrict $ BitStr.concat (tNumOneBits : tOneBitLocs)
+  False -> ByteStr.singleton 0
+  where
+    (numOneBits, oneBitLocs) = oneBitLocations $ bitString byteStr
+    tNumOneBits = truncateTo14Bits numOneBits
+    tOneBitLocs = Prelude.map truncateTo14Bits oneBitLocs

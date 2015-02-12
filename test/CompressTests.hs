@@ -26,14 +26,17 @@ truncateTo14BitsTests =
 
 
 truncateTo14BitsTestCases =
-  [(16384, Nothing),
-   (0, Just $ BitStr.take 14 $ bitString $ pack [0, 0]),
-   (1, Just $ BitStr.take 14 $ bitString $ pack [1, 0]),
-   (255, Just $ BitStr.take 14 $ bitString $ pack [255, 0]),
-   (1024, Just $ BitStr.take 14 $ bitString $ pack [0, 4])]
+  [(16384, BitStr.take 14 $ bitString $ pack [0, 0]),
+   (0, BitStr.take 14 $ bitString $ pack [0, 0]),
+   (1, BitStr.take 14 $ bitString $ pack [1, 0]),
+   (255, BitStr.take 14 $ bitString $ pack [255, 0]),
+   (1024, BitStr.take 14 $ bitString $ pack [0, 4])]
 
 compressTests =
   testFunction compress compressTestCases
 
 compressTestCases =
-  [(ByteStr.empty, ByteStr.empty)]
+  [(ByteStr.empty, pack [0]),
+   (pack [1, 0, 0], pack [1, 0, 0, 0]),
+   (pack [2, 0, 0], pack [1, 64, 0, 0]),
+   (pack [0, 1, 33], pack [3, 1, 0, 0, 1, 84, 0])]
