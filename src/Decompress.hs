@@ -1,4 +1,7 @@
-module Decompress() where
+module Decompress(decompress) where
 
-import BitString as BitStr
-import ByteString as ByteStr
+import Data.BitString as BitStr
+import Data.ByteString as ByteStr
+
+decompress :: ByteString -> ByteString
+decompress bitStr = bitStr

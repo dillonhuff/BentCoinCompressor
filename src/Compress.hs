@@ -10,7 +10,19 @@ import Data.Word
 oneBit = BitStr.take 1 $ bitString $ singleton 1
 zeroBit = BitStr.take 1 $ bitString $ singleton 0
 
-oneBitLocations :: BitString -> (Word32, [Word32])
+oneBitLocations :: BitString -> [Word32]
+oneBitLocations bitStr = recOneBitLocations 0 bitStr
+
+recOneBitLocations :: Word32 -> BitString -> [Word32]
+recOneBitLocations index bitStr = case BitStr.length bitStr == 0 of
+  True -> []
+  False -> case (BitStr.take 1 bitStr) == oneBit of
+    True -> index : rest
+    False -> rest
+    where
+      rest = recOneBitLocations (index + 1) $ BitStr.drop 1 bitStr
+
+{-oneBitLocations :: BitString -> (Word32, [Word32])
 oneBitLocations bitStr = recOneBitLocations 0 0 bitStr
 
 recOneBitLocations :: Word32 -> Word32 -> BitString -> (Word32, [Word32])
@@ -21,7 +33,7 @@ recOneBitLocations numOnes index bitStr = case BitStr.length bitStr == 0 of
     False -> res1
     where
       res1 = recOneBitLocations numOnes (index + 1) $ BitStr.drop 1 bitStr
-      res2 = recOneBitLocations (numOnes + 1) (index + 1) $ BitStr.drop 1 bitStr
+      res2 = recOneBitLocations (numOnes + 1) (index + 1) $ BitStr.drop 1 bitStr-}
 
 truncateTo14Bits :: Word32 -> BitString
 truncateTo14Bits word = truncateBits 14 word
@@ -37,9 +49,12 @@ truncateBits n word = BitStr.append nextBit restOfBits
 
 compress :: ByteString -> ByteString
 compress byteStr = case numOneBits > 0 of
-  True -> realizeBitStringStrict $ BitStr.concat (tNumOneBits : tOneBitLocs)
+  True -> realizeBitStringStrict $ BitStr.concat (tNumBits : tNumOneBits : tOneBitLocs)
   False -> ByteStr.singleton 0
   where
-    (numOneBits, oneBitLocs) = oneBitLocations $ bitString byteStr
+    oneBitLocs = oneBitLocations $ bitString byteStr
+    numBits = fromIntegral (BitStr.length $ bitString byteStr) :: Word32
+    tNumBits = truncateTo14Bits numBits
+    numOneBits = fromIntegral (Prelude.length oneBitLocs) :: Word32
     tNumOneBits = truncateTo14Bits numOneBits
     tOneBitLocs = Prelude.map truncateTo14Bits oneBitLocs
