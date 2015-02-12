@@ -7,8 +7,7 @@ import Data.BitString as BitStr
 import Data.ByteString as ByteStr
 import Data.Word
 
-oneBit = BitStr.take 1 $ bitString $ singleton 1
-zeroBit = BitStr.take 1 $ bitString $ singleton 0
+import Utils
 
 oneBitLocations :: BitString -> [Word32]
 oneBitLocations bitStr = recOneBitLocations 0 bitStr
