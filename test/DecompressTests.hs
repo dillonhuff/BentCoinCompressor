@@ -1,6 +1,6 @@
 module DecompressTests() where
 
-import Data.ByteString
+import Data.ByteString as ByteStr
 import Test.QuickCheck
 
 import Compress
@@ -12,4 +12,4 @@ allDecompressTests =
 compressDecompressAreIdentity bytes =
   (decompress $ compress byteStr) == byteStr
   where
-    byteStr = pack bytes
+    byteStr = ByteStr.take 16383 $ pack bytes
