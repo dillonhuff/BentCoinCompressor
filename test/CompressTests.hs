@@ -39,4 +39,4 @@ compressTestCases =
   [(ByteStr.empty, pack [0]),
    (pack [1, 0, 0], pack [1, 0, 0, 0]),
    (pack [2, 0, 0], pack [1, 64, 0, 0]),
-   (pack [0, 1, 33], pack [3, 1, 0, 0, 1, 84, 0])]
+   (pack [0, 1, 33], pack [3, 0, 2, 0, 1, 84, 0])]
